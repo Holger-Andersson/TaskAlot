@@ -7,7 +7,6 @@ const list = document.getElementById("task-List");
 const loadingMessage = document.getElementById("loading");
 const errorMessage = document.getElementById("error");
 
-
 const getTask = async () => {
     const res = await fetch("/task", {
         method: "POST",
@@ -56,7 +55,6 @@ const createCheckBox = (item) => {
     return container;
 };
 
-
 const checkedBox = async (event) => {
     await fetch(`/task/checked/${event.target.id}`, {
         method: "PUT",
@@ -66,7 +64,6 @@ const checkedBox = async (event) => {
     });
   //  renderTasks();
 };
-
 
 const createDeleteButton = (id) => {
     const container = document.createElement("div");
@@ -117,7 +114,6 @@ const setNewTask = (event) => {
     event.target.value = task;
 };
 
-
 const handleEnter = (event, newTask) => {
     if (event.key === "Enter") {
         if (newTask === task) {
@@ -127,7 +123,6 @@ const handleEnter = (event, newTask) => {
         getTask();
     }
 };
-
 
 button.addEventListener("click", getTask);
 
