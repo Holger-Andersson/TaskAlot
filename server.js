@@ -57,7 +57,7 @@ app.get("/tasks", (req, res) => {
     } catch (error) {
         console.log(JSON.stringify({ error: error.message, fn: "tasks" }));
         res.status(400).send({ error: "Can't load tasks" });
-     }
+    }
 });
 
 // använda function istället?
@@ -72,26 +72,38 @@ app.delete("/delete/:id", (req, res) => {
         writeToJsonFile(data);
         res.send(data);
     } catch (error) {
-        console.log(JSON.stringify({ error: error.message, fn: "/delete/:id"}));
-        res.status(400).send ({ error: "Can't remove task"});
+        console.log(JSON.stringify({ error: error.message, fn: "/delete/:id" }));
+        res.status(400).send({ error: "Can't remove task" });
     }
 });
 
 app.put("/task/checked/:id", (req, res) => {
     try {
+        const data = readJsonFile().map((data) => {
+            if (data.id == req.params.id) {
+                data.checked = !data.checked;
+            }
+            return data;
+        });
+        writeToJsonFile(data);
+        res.json(data.filter((d) => d.id === req.body.id));
+    } catch (error) {
+        console.log(JSON.stringify({ error: error.message, fn: "/task/checked/:id" }));
+        res.status(400).send({ error: "Can't confirm if checked." });
+        //KOLLA STATUSKODER
+    }
+});
+
+app.put("task/prio/:id", (req, res) => {
     const data = readJsonFile().map((data) => {
-        if (data.id == req.params.id) {
-            data.checked = !data.checked;
+        if (data.id === req.params.id) {
+            data.prio = Number.parseInt(req.body.prio);
         }
         return data;
     });
+
     writeToJsonFile(data);
-    res.json(data.filter((d) => d.id === req.body.id));
-} catch (error) {
-    console.log(JSON.stringify({ error: error.message, fn: "/task/checked/:id"}));
-    res.status(400).send ({ error: "Can't confirm if checked."});
-    //KOLLA STATUSKODER
-}
+    res.json(data.filter((d) => d.id === req.params.id));
 });
 
 app.listen(3000, () => {
