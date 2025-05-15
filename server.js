@@ -56,8 +56,8 @@ app.get("/tasks", (req, res) => {
         res.send(data);
     } catch (error) {
         console.log(JSON.stringify({ error: error.message, fn: "tasks" }));
-        res.status(500).send({ error: "Can't load tasks" });
-    }
+        res.status(400).send({ error: "Can't load tasks" });
+     }
 });
 
 // använda function istället?

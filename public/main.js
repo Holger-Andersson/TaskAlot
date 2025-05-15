@@ -37,7 +37,7 @@ const createTextNode = (item) => {
 
 const createLiNoDataAvailable = () => {
     const container = document.createElement("li");
-    container.textContent = "No data available";
+    container.textContent = "This is an empty list, let's change that.";
     return container;
 };
 
@@ -62,7 +62,7 @@ const checkedBox = async (event) => {
             "Content-Type": "application/json",
         },
     });
-  //  renderTasks();
+    renderTasks();
 };
 
 const createDeleteButton = (id) => {
@@ -101,7 +101,7 @@ const renderTasks = async () => {
         list.appendChild(el);
     } else {
         loadingMessage.remove();
-        for ( let taskItem of taskList) {
+        for (taskItem of taskList) {
             const listElement = createLiElement(taskItem);
 
             list.appendChild(listElement);
