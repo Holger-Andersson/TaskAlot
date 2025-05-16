@@ -5,7 +5,6 @@ const taskInput = document.getElementById("task");
 const button = document.getElementById("submit");
 const list = document.getElementById("task-List");
 const loadingMessage = document.getElementById("loading");
-const errorMessage = document.getElementById("error");
 
 const getTask = async () => {
     const res = await fetch("/task", {
@@ -78,8 +77,49 @@ const createDeleteButton = (id) => {
     return container;
 };
 
+const sortDropdownPrio = () =>
+    taskList.sort((a, b) => {
+        if (a.prio < b.prio) {
+            return -1;
+        } else if (a.prio > b.prio) {
+            return 1;
+        }
+        return 0;
+    });
+
+const updateDropdown = async (event) => {
+    const res = await fetch(`/task/prio/${event.target.id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            prio: event.target.value,
+        }),
+
+    });
+    renderTasks();
+}
+
+const createDropdown = (item) => {
+    const container = document.createElement("div");
+    const dropdown = document.createElement("select");
+    dropdown.id = item.id;
+    const arrList = [1, 2, 3];
+
+    for (prio of arrList) {
+        dropdown.options.add(new Option(prio, prio));
+    }
+    dropdown.value = item.prio;
+    dropdown.addEventListener("change", updateDropdown);
+    container.appendChild(dropdown);
+    console.log("we run dropdown");
+    return container;
+};
+
 const createLiElement = (item) => {
     const container = document.createElement("li");
+    container.appendChild(createDropdown(item));
     container.appendChild(createCheckBox(item));
     container.appendChild(createTextNode(item));
     container.appendChild(createDeleteButton(item.id));
@@ -101,9 +141,8 @@ const renderTasks = async () => {
         list.appendChild(el);
     } else {
         loadingMessage.remove();
-        for (taskItem of taskList) {
+        for (taskItem of sortDropdownPrio()) {
             const listElement = createLiElement(taskItem);
-
             list.appendChild(listElement);
         }
     }
@@ -119,7 +158,6 @@ const handleEnter = (event, newTask) => {
         if (newTask === task) {
             setNewTask(event);
         }
-        //error.innerText = "";
         getTask();
     }
 };

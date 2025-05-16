@@ -10,24 +10,16 @@ body {
   padding: 1rem;
 }
 
-
-h1#heading {
+h1 {
   text-align: center;
-  margin: 0 0 1rem;
   color: #333333;
 }
-
 
 #task {
   padding: 0.5rem;
   border: 1px solid #cccccc;
   border-radius: 4px;
-  outline: none;
   transition: border-color 0.2s;
-}
-
-#task:focus {
-  border-color: #007BFF;
 }
 
 #submit {
@@ -37,7 +29,6 @@ h1#heading {
   background-color: #007BFF;
   color: #ffffff;
   border-radius: 4px;
-  cursor: pointer;
   transition: background-color 0.2s;
 }
 
@@ -45,16 +36,7 @@ h1#heading {
   background-color: #0056b3;
 }
 
-
-#error {
-  color: #dc3545;
-  height: 1rem;
-  margin: 0 0 1rem;
-}
-
-
 #task-List {
-  list-style: none;
   padding: 0;
   margin: 0;
   width: 100%;
@@ -70,22 +52,4 @@ h1#heading {
   margin-bottom: 0.5rem;
   border-radius: 4px;
   transition: background-color 0.2s;
-}
-
-#task-List li:hover {
-  background-color: #eef1f5;
-}
-
-
-.delete-btn {
-  background: transparent;
-  border: none;
-  color: #dc3545;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.delete-btn:hover {
-  color: #a71d2a;
 }

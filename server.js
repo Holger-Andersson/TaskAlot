@@ -24,28 +24,32 @@ function writeToJsonFile(data) {
 app.use("/static", express.static("public"));
 app.use(bodyParser.json());
 
+class ValidationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "ValidationError";
+    }
+}
+
 app.post("/task", (req, res) => {
     try {
-        if (!req.body.task) {
-            throw new ValidationError("Can't find task");
-        }
         const data = readJsonFile();
 
         data.push({
             id: uuidv4(),
-            //  prio: 3,
+            prio: 3,
             checked: false,
             task: req.body.task,
         });
 
         writeToJsonFile(data);
-        res.send({ message: `${req.body.task} is added to the list` });
+        res.send({ message: `New task added to the list` });
     } catch (error) {
         console.error(JSON.stringify({ error: error.message, fn: "/task" }));
         if (error instanceof ValidationError) {
             res.status(400).send({ error: error.message });
         } else {
-            res.status(500).send({ error: "Unable to make new tasks" });
+            res.status(500).send({ error: "Unable to create new task" });
         }
     }
 });
@@ -60,25 +64,18 @@ app.get("/tasks", (req, res) => {
     }
 });
 
-// använda function istället?
 app.get("/", (req, res) => {
     res.sendFile(path.resolve("view", "index.html"));
 });
 
-//kolla status koder --> 400?
 app.delete("/delete/:id", (req, res) => {
-    try {
+
         const data = readJsonFile().filter((d) => d.id !== req.params.id);
         writeToJsonFile(data);
         res.send(data);
-    } catch (error) {
-        console.log(JSON.stringify({ error: error.message, fn: "/delete/:id" }));
-        res.status(400).send({ error: "Can't remove task" });
-    }
 });
 
 app.put("/task/checked/:id", (req, res) => {
-    try {
         const data = readJsonFile().map((data) => {
             if (data.id == req.params.id) {
                 data.checked = !data.checked;
@@ -87,14 +84,10 @@ app.put("/task/checked/:id", (req, res) => {
         });
         writeToJsonFile(data);
         res.json(data.filter((d) => d.id === req.body.id));
-    } catch (error) {
-        console.log(JSON.stringify({ error: error.message, fn: "/task/checked/:id" }));
-        res.status(400).send({ error: "Can't confirm if checked." });
-        //KOLLA STATUSKODER
-    }
 });
 
-app.put("task/prio/:id", (req, res) => {
+app.put("/task/prio/:id", (req, res) => {
+     console.log("CHECK PUT");
     const data = readJsonFile().map((data) => {
         if (data.id === req.params.id) {
             data.prio = Number.parseInt(req.body.prio);
